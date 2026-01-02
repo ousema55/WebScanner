@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSec Scanner - Résultats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Inline CSS (Optimized) -->
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-running {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid #3b82f6;
+        }
+
+        .status-finished {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+
+        .status-stopped {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid #ef4444;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            margin: 2rem 0 1rem 0;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid #334155;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .badge-critical {
+            background: rgba(220, 38, 38, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .badge-get {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .badge-post {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .code-context {
+            display: block;
+            max-width: 300px;
+            max-height: 100px;
+            overflow: auto;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-stop {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-home {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--text-secondary);
+        }
+
+        #logs-container {
+            margin-top: 2rem;
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> WebSec Report
+            </div>
+            <div id="status-display" class="status-badge status-running">
+                <i class="fas fa-sync fa-spin"></i> Scan en cours...
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number" id="count-scanned">0</div>
+                <div class="stat-label">Pages Scannées</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="count-forms">0</div>
+                <div class="stat-label">Formulaires</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="count-vulns" style="color: var(--danger-color)">0</div>
+                <div class="stat-label">Vulnérabilités</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Vulnérabilités Détectées</h2>
+        <div class="table-responsive">
+            <table id="vulns-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Type</th>
+                        <th style="width: 25%">URL / Param</th>
+                        <th style="width: 10%">Méthode</th>
+                        <th style="width: 20%">Payload</th>
+                        <th style="width: 20%">Context HTML</th>
+                        <th style="width: 10%">Sévérité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS will populate this -->
+                </tbody>
+            </table>
+            <div id="empty-state" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                En attente de résultats...
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+            <button onclick="stopScan()" id="btn-stop" class="btn-action btn-stop">
+                <i class="fas fa-stop"></i> Arrêter le Scan
+            </button>
+            <a href="/" class="btn-action btn-home">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+            <button onclick="toggleLogs()" class="btn-action" style="background: #4b5563; color: white;">
+                <i class="fas fa-terminal"></i> Logs
+            </button>
+        </div>
+
+        <div id="logs-container" style="display: none;">
+            <!-- Logs go here -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        let isRunning = true;
+
+        async function updateUI(data) {
+            // Update Stats
+            document.getElementById('count-scanned').innerText = data.scanned_count || 0;
+            document.getElementById('count-forms').innerText = (data.forms_found || []).length;
+
+            const vulns = data.vulnerabilities || [];
+            document.getElementById('count-vulns').innerText = vulns.length;
+
+            // Update Table if new vulns
+            if (vulns.length > 0) {
+                document.getElementById('empty-state').style.display = 'none';
+                const tbody = document.querySelector('#vulns-table tbody');
+                tbody.innerHTML = '';
+
+                vulns.forEach(v => {
+                    const row = `
+                        <tr>
+                            <td>${v.type}</td>
+                            <td>
+                                <div style="max-height:80px; overflow-y:auto; word-break:break-all;">${v.url}</div>
+                                ${v.parameter ? `<small style="color:#94a3b8">Param: <code>${v.parameter}</code></small>` : ''}
+                            </td>
+                            <td><span class="badge badge-${v.method.toLowerCase()}">${v.method.toUpperCase()}</span></td>
+                            <td><code style="display:block; max-height:60px; overflow-y:auto;">${v.payload || ''}</code></td>
+                            <td>
+                                ${v.context ? `<div class="code-context">${v.context}</div>` : '-'}
+                            </td>
+                            <td><span class="badge badge-critical">${v.severity}</span></td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+
+            // Update Logs
+            const logsContainer = document.getElementById('logs-container');
+            if (data.logs) {
+                logsContainer.innerHTML = data.logs.map(l => `<div>> ${l}</div>`).join('');
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+
+            // Update Status
+            if (data.finished) {
+                isRunning = false;
+                const badge = document.getElementById('status-display');
+
+                if (data.is_stopped) {
+                    badge.className = 'status-badge status-stopped';
+                    badge.innerHTML = '<i class="fas fa-stop-circle"></i> Scan Arrêté';
+                } else {
+                    badge.className = 'status-badge status-finished';
+                    badge.innerHTML = '<i class="fas fa-check"></i> Scan Terminé';
+                }
+
+                document.getElementById('btn-stop').style.display = 'none';
+            }
+        }
+
+        async function pollStatus() {
+            if (!isRunning) return;
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                updateUI(data);
+
+                if (!data.finished) {
+                    setTimeout(pollStatus, 1000); // Poll every 1s
+                }
+            } catch (e) {
+                console.error("Polling error", e);
+            }
+        }
+
+        async function stopScan() {
+            if (!confirm("Voulez-vous vraiment arrêter le scan ?")) return;
+            document.getElementById('btn-stop').innerText = "Arrêt en cours...";
+            document.getElementById('btn-stop').disabled = true;
+            await fetch('/api/stop', { method: 'POST' });
+        }
+
+        function toggleLogs() {
+            const el = document.getElementById('logs-container');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Start polling on load
+        pollStatus();
+    </script>
+</body>
+
+</html>

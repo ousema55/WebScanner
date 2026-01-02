@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSec Scanner - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Inline CSS for robust loading -->
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .scan-card {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .scan-card h2 {
+            margin-bottom: 1rem;
+        }
+
+        .scan-card p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        input[type="url"],
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus,
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn-scan {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-scan:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-item {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-item i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> WebSec Scanner
+            </div>
+            <p class="subtitle">Advanced XSS & SQLi Vulnerability Analyzer</p>
+        </header>
+
+        <main>
+            <div class="card scan-card">
+                <h2>Start New Scan</h2>
+                <p>Enter the target URL to detect potential security vulnerabilities.</p>
+
+                <form action="/scan" method="POST" id="scanForm">
+                    <div class="input-group">
+                        <i class="fas fa-globe"></i>
+                        <input type="url" name="url" placeholder="http://example.com" required>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 15px;">
+                        <i class="fas fa-cookie-bite"></i>
+                        <input type="text" name="cookie"
+                            placeholder="Session Cookie (e.g., PHPSESSID=xyz...) - Optional">
+                    </div>
+
+                    <button type="submit" class="btn-scan" id="scanBtn">
+                        <span class="btn-text">Start Scan</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                </form>
+                {% if error %}
+                <div class="alert error">
+                    {{ error }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-code"></i>
+                    <h3>XSS Detection</h3>
+                    <p>Tests for Reflected, Stored, and DOM-based XSS.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-database"></i>
+                    <h3>SQL Injection</h3>
+                    <p>Checks for Error-based and Boolean-based SQLi.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Detailed Reports</h3>
+                    <p>Get comprehensive logs and vulnerability details.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Projet éducatif – Sécurité Web &copy; 2026</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
